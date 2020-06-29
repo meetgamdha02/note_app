@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useHistory, Redirect} from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -35,27 +35,15 @@ let SignUp = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { classes } = props;
+    const {createUser , user} = props;
+    const history = useHistory();
     const handleSubmit = (e) => {
         e.preventDefault();
-        const User = {
-            username: userName,
-            email: email,
-            password: password
-        }
-        return fetch(URL + 'logIn', {
-            method: 'POST',
-            body: JSON.stringify(User),
-            headers : {
-                "Content-type" : 'application/json'
-            },
-            credentials: 'same-origin'
-        }, err => {
-            var errmsg = new Error(err.message);
-            throw errmsg;
-        })
-            .then((res) => res.json())
-            .then((res) => console.log(res))
-            .catch((err) => console.log(err.message));
+        createUser(userName , email , password)
+        console.log(user);
+       if(user){
+           history.push("/home");
+       }
     }
     return (
         <Container maxWidth="xs">
