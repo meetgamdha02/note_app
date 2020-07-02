@@ -3,9 +3,8 @@ const TOKEN_SECRET_KEY = require('./utils');
 const { model } = require('./models/users');
 getToken = (user)=>{
     return jwt.sign({
-      user
-    }, TOKEN_SECRET_KEY , {
-        expiresIn : "60000"
-    });
+      username : user.username,
+      email : user.email
+    }, TOKEN_SECRET_KEY );
 }
 module.exports = getToken ;

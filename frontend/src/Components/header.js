@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home(props) {
+export default function Header(props) {
   const classes = useStyles();
   const history = useHistory();
   const handleClick = () =>{

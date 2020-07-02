@@ -8,17 +8,17 @@ const userRouter = express.Router();
 userRouter.use(bodyParsor.json());
 // userRouter.use(auth);
 
-function auth(req , res , next){
+function auth(req, res, next) {
     // console.log(req.headers['Authorization']);
     // console.log(req.headers.Authorization);
-    if(!req.headers['authorization']){
-        var err = new Error(`You are not authenticated`);   
+    if (!req.headers['authorization']) {
+        var err = new Error(`You are not authenticated`);
         next(err);
-    }else{
-       var bearer = req.headers['authorization'].split(' ');
-       const token = bearer[1];
-       req.token = token;
-       next();
+    } else {
+        var bearer = req.headers['authorization'].split(' ');
+        const token = bearer[1];
+        req.token = token;
+        next();
     }
 }
 userRouter.route('/logIn').post((req, res, next) => {
@@ -39,8 +39,11 @@ userRouter.route('/logIn').post((req, res, next) => {
                 res.statusCode = 200;
                 res.setHeader('Content-type', 'application/json');
                 res.json({
-                    user : user , 
-                    token : getToken(user)
+                    user: {
+                        username: user.username,
+                        email: user.email
+                    },
+                    token: getToken(user)
                 });
             }
         })
@@ -69,22 +72,22 @@ userRouter.route('/signUp').post((req, res, next) => {
     });
 
 
-userRouter.route('/meet').get(auth , (req, res, next) => {
-    jwt.verify(req.token , TOKEN_SECRET_KEY , (err , decoded)=>{
-        if(err){
+userRouter.route('/meet').get(auth, (req, res, next) => {
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decoded) => {
+        if (err) {
             res.statusCode = 403;
-            throw err;        
-        }else{ 
+            throw err;
+        } else {
             res.json(decoded);
         }
-    }).catch((err)=>next(err));
+    }).catch((err) => next(err));
 })
-userRouter.route("/user/profile").put(auth , (req, res, next) => {
-    console.log(req.body , req.headers);
-    jwt.verify(req.token , TOKEN_SECRET_KEY , (err , decode)=>{
-        if(err)res.sendStatus(403);
-        else{
-           req.user = decode.user['username'];
+userRouter.route("/user/profile").put(auth, (req, res, next) => {
+    console.log(req.body, req.headers);
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
+        if (err) res.sendStatus(403);
+        else {
+            req.user = decode.username;
         }
     })
     User.findOne({ username: req.user })
@@ -101,8 +104,11 @@ userRouter.route("/user/profile").put(auth , (req, res, next) => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
                     res.json({
-                        user : user,
-                        token : getToken(user)
+                        user: {
+                            username: user.username,
+                            email: user.email
+                        },
+                        token: getToken(user)
                     });
                 }, err => {
                     next(err);
@@ -114,5 +120,56 @@ userRouter.route("/user/profile").put(auth , (req, res, next) => {
             next(err);
         })
 })
+
+
+userRouter.route('/user/home').get(auth, (req, res, next) => {
+    console.log(req.token)
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
+        if (err) {
+            var err = new Error(`There are some errors`);
+            next(err);
+        }
+        else {
+            console.log(decode.username);
+            User.findOne({ username: decode.username }).then((user) => {
+                res.statusCode = 200;
+                res.setHeader('Content-type', 'application/json');
+                res.json(user.notes)
+            }, err => {
+                next(err);
+            })
+                .catch((err) => {
+                    next(err);
+                })
+        }
+    })
+});
+
+userRouter.route('/user/home').post(auth, (req, res, next) => {
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
+        if (err) {
+            var err = new Error(`There are some errors`);
+            next(err);
+        }
+        else {
+            console.log(decode.username);
+            User.findOne({ username: decode.username }).then((user) => {
+                if (user != null) {
+                    user.notes.push({
+                        title: req.body.title,
+                        description: req.body.description
+                    });
+                    user.save()
+                        .then((user) => {
+                            res.statusCode = 200;
+                            res.setHeader('Content-type', 'application/json');
+                            res.json(user.notes);
+                        }, err => next(err));
+                }
+            }, err => next(err))
+                .catch((err) => next(err));
+        }
+    })
+});
 
 module.exports = userRouter;

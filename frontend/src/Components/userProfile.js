@@ -107,7 +107,6 @@ let UserProfile = (props) => {
                     {!disabel &&  <Button
                             variant="contained"
                             color="primary"
-                            onClick = {handleUpdate}
                             className={classes.button}
                             onClick = {handleChange}
                            >
