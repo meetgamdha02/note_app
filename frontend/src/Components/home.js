@@ -1,4 +1,5 @@
 import React from 'react';
+import {useHistory} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,7 +21,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home(props) {
   const classes = useStyles();
-
+  const history = useHistory();
+  const handleClick = () =>{
+      history.replace(`/user/profile`)
+  }
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -28,9 +32,9 @@ export default function Home(props) {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            ToDo App
+            Todo App
           </Typography>
-          <Button color="inherit">{props.user.username ? props.user.username : ""}</Button>
+          <Button color="inherit" onClick = {handleClick}>{props.user['user'].username ?props.user['user'].username : ""}</Button>
         </Toolbar>
       </AppBar>
     </div>

@@ -27,7 +27,7 @@ export const createUser = (username, email, password) => (dispatch) => {
                 throw errmsg;
             })
         .then(response => response.json())
-        .then((User) => dispatch(addUser(User.username)))
+        .then((User) => dispatch(addUser(User.user)))
         .catch((err) => {
             console.log(err.message)
         })
@@ -40,36 +40,73 @@ export const addUser = (username) => ({
 
 
 export const logInUser = (username) => ({
-    type : ActionType.lOG_IN_USER,
-    payload : username
+    type: ActionType.lOG_IN_USER,
+    payload: username
 })
 
-export const tepLogInUser = (username , password) =>(dispatch)=>{
+export const tepLogInUser = (username, password) => (dispatch) => {
     var User = {
-        username : username,
-        password : password
+        username: username,
+        password: password
     };
 
-    return fetch(URL + 'logIn' , {
-        method : 'POST',
-        body : JSON.stringify(User),
-        credentials : 'same-origin',
-        headers : {
-            "Content-type" : "Application/json"
+    return fetch(URL + 'logIn', {
+        method: 'POST',
+        body: JSON.stringify(User),
+        credentials: 'same-origin',
+        headers: {
+            "Content-type": "Application/json"
         },
     })
-    .then((res)=>{
-        if(res.ok)return res;
-        else{
-            var error = new Error(`Error ${res.status} : ${res.statusText}`);
-            error.response = res;
-            throw error;
-        }
-    } , err=>{
-        var errmsg = new Error(err.message);
-        throw errmsg;
-    })
-    .then((res)=>res.json())
-    .then((res)=>dispatch(logInUser(res)))
-    .catch((err)=>console.log(err));
+        .then((res) => {
+            if (res.ok) return res;
+            else {
+                var error = new Error(`Error ${res.status} : ${res.statusText}`);
+                error.response = res;
+                throw error;
+            }
+        }, err => {
+            var errmsg = new Error(err.message);
+            throw errmsg;
+        })
+        .then((res) => res.json())
+        .then((res) => dispatch(logInUser(res)))
+        .catch((err) => console.log(err));
 }
+
+export const tempUpdateUser = (token, username, email) => (dispatch) => {
+    var user;
+    if(username === ''){
+        user = {email : email}
+    }
+    else{
+        user = {username : username}
+    }
+    return fetch(URL + 'user/profile', {
+        method: 'PUT',
+        body: JSON.stringify(user),
+        headers: {
+            "Content-type": "Application/json",
+            "authorization": `Bearer ${token}`
+        }
+    })
+        .then((res) => {
+            if (res.ok) return res;
+            else {
+                var error = new Error(`Error ${res.status} : ${res.statusText}`);
+                error.response = res;
+                throw error;
+            }
+        }, err => {
+            var errmsg = new Error(err.message);
+            throw errmsg;
+        })
+        .then((res) => res.json())
+        .then((res) => dispatch(updateUser(res)))
+        .catch((err) => console.log(err));
+}
+
+export const updateUser = (user) =>({
+    type : ActionType.UPDATE_USER,
+    payload : user
+})

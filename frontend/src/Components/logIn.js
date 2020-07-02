@@ -31,7 +31,7 @@ let LogIn = (props) => {
     const [password, setPasswod] = useState('');
     const history = useHistory();
     useEffect(()=>{
-        if(props.user)history.push(`/${props.user.username}/home`);
+        if(props.user)history.replace(`/user/home`);
     },[props.user])
     const handleSubmit = (e) => {
         e.preventDefault();

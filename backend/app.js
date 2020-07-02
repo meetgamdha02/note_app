@@ -4,9 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var indexRouter = require('./routes/index');
-var signUpRouter = require('./routes/SignUp');
-var logInRouter = require('./routes/logIn');
+var userRouter = require('./routes/userRouter');
 var mongoose = require('mongoose');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
@@ -14,7 +12,7 @@ var app = express();
 
 
 const URL = 'mongodb://localhost:27017/todo';
-const connect = mongoose.connect(process.env.MONGODB_URL || URL);
+const connect = mongoose.connect(URL);
 
 connect.then((db) => {
   console.log('Connected Successfully');
@@ -43,29 +41,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // function auth(req, res, next) {
 //   console.log(req.session);
 
-//   if (!req.session.username) {
+//   if (!req.header.authentication) {
 //     var err = new Error('You are not authenticated!');
 //     err.status = 403;
 //     return next(err);
 //   }
-//   else {
-//     if (req.session.user === 'authenticated') {
-//       next();
-//     }
-//     else {
-//       var err = new Error('You are not authenticated!');
-//       err.status = 403;
-//       return next(err);
-//     }
-//   }
 // }
 // app.use(auth)
-app.use('/', indexRouter);
-app.use('/signUp', signUpRouter);
-app.use('/logIn', logInRouter);
-if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('../frontend/build'));
-}
+app.use('/', userRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
