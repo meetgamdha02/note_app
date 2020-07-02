@@ -14,7 +14,7 @@ var app = express();
 
 
 const URL = 'mongodb://localhost:27017/todo';
-const connect = mongoose.connect(URL);
+const connect = mongoose.connect(process.env.MONGODB_URL || URL);
 
 connect.then((db) => {
   console.log('Connected Successfully');
@@ -63,7 +63,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/signUp', signUpRouter);
 app.use('/logIn', logInRouter);
-
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static('../frontend/build'));
+}
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

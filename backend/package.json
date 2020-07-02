@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "devStart": "nodemon app.js",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "heroku-postbuild" : "cd ../frontend && npm install && npm build"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
