@@ -32,7 +32,7 @@ let UserProfile = (props) => {
     const history = useHistory();
     const [newName , setnewName] = useState('');
     const [newEmail , setnewEmail] = useState('');
-    console.log(props.user['token']);
+    // console.log(props.user['token']);
     let handleBack = ()=>{
         history.replace(`/user/home`)
     }
@@ -42,7 +42,7 @@ let UserProfile = (props) => {
     }
 
     let handleChange =()=>{
-        props.updateUser(props.user['token'] , newName , newEmail);
+        props.updateUser(newName , newEmail);
     }
     return (
         <Container maxWidth="xs">

@@ -39,7 +39,7 @@ let SignUp = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createUser(userName , email , password)
-        console.log(user);
+        // console.log(user);
        if(user){
            history.push("/home");
        }

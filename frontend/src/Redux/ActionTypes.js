@@ -10,7 +10,7 @@ export const SIGN_UP_USER_LOADING = 'SIGN_UP_USER_LOADING';
 export const lOG_IN_USER = 'lOG_IN_USER';
 export const LOGIN_USER_FAILED = 'LOGIN_USER_FAILED';
 export const LOGIN_USER_LOADING = 'LOGIN_USER_LOADING';
-
+export const LOGOUT_USER = "LOGOUT_USER"
 
 ////update profile
 
@@ -26,3 +26,4 @@ export const ADD_NOTE_FAILED = "ADD_NOTE_FAILED";
 export const DISPLAY_NOTES = "DISPLAY_NOTES";
 export const DISPLAY_NOTES_LOADING = "DISPLAY_NOTES_LOADING";
 export const DISPLAY_NOTES_FAILED = "DISPLAY_NOTES_FAILED";
+export const UPDATE_NOTE = "UPDATE_NOTE";

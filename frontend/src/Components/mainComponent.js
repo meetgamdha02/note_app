@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import { createUser, tepLogInUser, tempUpdateUser, tempDisplayNotes } from '../Redux/ActionCreators';
+import { Route, Switch, Redirect, withRouter, useHistory } from 'react-router-dom';
+import { createUser, tepLogInUser, tempUpdateUser, tempDisplayNotes , logOutUser  , tempUpdateNotes} from '../Redux/ActionCreators';
 import LogIn from './logIn';
 import SignUp from './signUp';
 import UserProfile from './userProfile';
@@ -15,18 +15,21 @@ const mapStateToProps = (state) => {
 const mapDispacherToProps = (disptach) => ({
     createUser: (username, email, password) => disptach(createUser(username, email, password)),
     tepLogInUser: (username, password) => disptach(tepLogInUser(username, password)),
-    tempUpdateUser: (token, username, email) => disptach(tempUpdateUser(token, username, email)),
-    displayNotes: (token) => disptach(tempDisplayNotes(token))
+    tempUpdateUser: (username, email) => disptach(tempUpdateUser( username, email)),
+    displayNotes: () => disptach(tempDisplayNotes()),
+    logOut : ()=>(disptach(logOutUser())),
+    updateNotes : (id , title , description)=>disptach(tempUpdateNotes(id , title , description))
 })
 
 const Main = (props) => {
-
-    const token = props.user.user['token'];
-
-    useEffect(() => {
-        props.displayNotes(token);
-    }, [])
-
+  
+    useEffect(()=>{
+        props.displayNotes()
+        return ()=>{
+    
+        }
+    } , [])
+   
     const login = () => {
         return (
             <LogIn logInUser={props.tepLogInUser} user={props.user.user} />
@@ -39,7 +42,7 @@ const Main = (props) => {
     }
     const HomeComponenet = ({ match }) => {
         return (
-            <TodoPage user={props.user.user} notes={props.notes.notes} />
+            <TodoPage user={props.user.user} notes = {props.notes.notes} logout = {props.logOut} updateNotes = {props.updateNotes}/>
         )
     }
     const UserProfileComponent = () => {

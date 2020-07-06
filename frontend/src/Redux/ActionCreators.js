@@ -74,17 +74,23 @@ export const tepLogInUser = (username, password) => (dispatch) => {
         .catch((err) => console.log(err));
 }
 
-export const tempUpdateUser = (token, username, email) => (dispatch) => {
-    var user;
+export const tempUpdateUser = (username, email) => (dispatch, getState) => {
+    var userInfo;
+
     if (username === '') {
-        user = { email: email }
+        userInfo = { email: email }
     }
     else {
-        user = { username: username }
+        userInfo = { username: username }
     }
+
+    const {
+        user: { user }
+    } = getState();
+    const token = user ? user.token : ''
     return fetch(URL + 'user/profile', {
         method: 'PUT',
-        body: JSON.stringify(user),
+        body: JSON.stringify(userInfo),
         headers: {
             "Content-type": "Application/json",
             "authorization": `Bearer ${token}`
@@ -111,11 +117,16 @@ export const updateUser = (user) => ({
     payload: user
 });
 
-export const tempDisplayNotes = (token) => (dispatch) => {
+export const tempDisplayNotes = () => (dispatch, getState) => {
     // var note = {
     //     title : title,
     //     description : description
     // },
+    const {
+        user: { user }
+    } = getState()
+    // console.log(user.token)
+    const token = user ? user.token : ''
     return fetch(URL + 'user/home', {
         method: 'GET',
         headers: {
@@ -143,3 +154,50 @@ export const displayNotes = (notes) => ({
     type: ActionType.DISPLAY_NOTES,
     payload: notes
 })
+
+export const logOutUser = () => ({
+    type: ActionType.LOGOUT_USER
+});
+
+
+export const tempUpdateNotes = (id , title, description) => (dispatch, getState) => {
+    var note = {
+        id : id,
+        title: title,
+        description: description
+    }
+
+  
+    const {
+        user: { user }
+    } = getState();
+    const token = user ? user.token : ''
+    return fetch(URL + 'user/home', {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+            'authorization': `Bearer ${token}`
+        },
+        body : JSON.stringify(note)
+    })
+
+        .then((res) => {
+            if (res.ok) return res;
+            else {
+                var error = new Error(`Error ${res.status} : ${res.statusText}`);
+                error.response = res;
+                throw error;
+            }
+        }, err => {
+            var errmsg = new Error(err.message);
+            throw errmsg;
+        })
+        .then((res) => res.json())
+        .then((data) => dispatch(updateNotes(data)))
+        .catch((err) => console.log(err));
+}
+
+export const updateNotes = (data) =>({
+    type : ActionType.UPDATE_NOTE,
+    payload : data
+});

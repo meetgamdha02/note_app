@@ -172,4 +172,27 @@ userRouter.route('/user/home').post(auth, (req, res, next) => {
     })
 });
 
+userRouter.route('/user/home').put(auth, (req, res, next) => {
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
+        if (err) {
+            var err = new Error(`There are some errors`);
+        }
+        else {
+            User.findOne({ username: decode.username }).then((user) => {
+                if (user != null) {
+                    user.notes.id(req.body.id).title = req.body.title;
+                    user.notes.id(req.body.id).description = req.body.description;
+                }
+                user.save()
+                    .then((user) => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-type', 'application/json');
+                        res.json(user.notes);
+                    }, err => next(err));
+            })
+                .catch((err) => next(err));
+        }
+    })
+})
+
 module.exports = userRouter;

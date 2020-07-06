@@ -1,5 +1,5 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,8 +22,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Header(props) {
   const classes = useStyles();
   const history = useHistory();
-  const handleClick = () =>{
-      history.replace(`/user/profile`)
+  const handleClick = () => {
+    history.replace(`/user/profile`)
+  }
+  const handleLogOut = () => {
+    props.logout();
+    history.replace(`/logIn`)
   }
   return (
     <div className={classes.root}>
@@ -34,7 +38,8 @@ export default function Header(props) {
           <Typography variant="h6" className={classes.title}>
             Todo App
           </Typography>
-          <Button color="inherit" onClick = {handleClick}>{props.user['user'].username ?props.user['user'].username : ""}</Button>
+          <Button color="inherit" onClick={handleClick}>{props.user ? props.user['user'].username : ""}</Button>
+          <Button color="inherit" onClick={handleLogOut}>LOG OUT</Button>
         </Toolbar>
       </AppBar>
     </div>

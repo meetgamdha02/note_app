@@ -12,6 +12,14 @@ export const Notes = (state = {
             return{
                 ...state , notes : actions.payload
             }
+        case ActionTypes.UPDATE_NOTE :
+            return {
+                ...state , notes : actions.payload
+            }
+        case ActionTypes.LOGOUT_USER:
+            return {
+                ...state , notes : []
+            }
         default : 
         return state;
     }

@@ -17,6 +17,9 @@ export const USER = (state  = {
             var User = action.payload;
             Cookie.set('userInfo' , JSON.stringify(User));
             return { ...state , user : User}
+        case ActionTypes.LOGOUT_USER:
+            Cookie.remove("userInfo")
+            return {};
         default:
             return state;
     }
