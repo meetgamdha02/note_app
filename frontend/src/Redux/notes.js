@@ -16,6 +16,10 @@ export const Notes = (state = {
             return {
                 ...state , notes : actions.payload
             }
+        case ActionTypes.DELETE_NOTE:
+            return{
+                ...state , notes : actions.payload
+            }
         case ActionTypes.LOGOUT_USER:
             return {
                 ...state , notes : []

@@ -25,7 +25,7 @@ const Style = (theme) => ({
         margin: theme.spacing(3, 0, 2)
     },
     link: {
-        margin: theme.spacing(3)
+        margin: theme.spacing(3 , 5 , 3)
     }
 });
 
@@ -53,7 +53,7 @@ let SignUp = (props) => {
                 </Typography>
                 <form className={classes.form}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm = {6}>
                             <TextField
                                 id="username"
                                 name="username"
@@ -67,7 +67,7 @@ let SignUp = (props) => {
                             </TextField>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm = {6}>
                             <TextField
                                 id="email"
                                 name="email"

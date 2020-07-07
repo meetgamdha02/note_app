@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Header from './header';
-import { withStyles, Box, Typography, Grid, colors, Button, Dialog, DialogTitle, DialogActions } from '@material-ui/core';
-import TextField from "@material-ui/core/TextField";
-import { randomColor } from 'randomcolor';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import { useHistory } from 'react-router-dom';
+import { withStyles, Box, Typography, Grid, Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import createSpacing from '@material-ui/core/styles/createSpacing';
 const Style = (theme) => ({
     paper: {
         margin: theme.spacing(3, 0, 3),
@@ -30,89 +28,88 @@ const Style = (theme) => ({
         marginLeft: theme.spacing(2),
         flex: 1,
     },
+    floatingButton: {
+        position: 'fixed',
+        bottom: 10,
+        right: 10
+    },
+    emptyTaxt : {
+        margin : theme.spacing(25),
+        color : "#999999"
+    }
 });
+
+let EmptyTag = (props) => {
+    return (
+        <div className = {props.classes.emptyTaxt}>
+            <Grid container spacing = {3}>
+                <Grid item xs = {12} md = {12}>
+                    <Typography variant="h4" component="h2">
+                        You do not have any notes , add by clicking on Add button !!
+                    </Typography>
+
+                </Grid>
+            </Grid>
+        </div>
+    )
+}
+
 let TodoPage = (props) => {
+    const history = useHistory();
 
-    var color = randomColor();
-    const [open, setOpen] = useState(false);
-    const [id , setId] = useState('');
-    const [title , setTitle] = useState('');
-    const [noteTitle , setNoteTitle] = useState('');
-    const [desc , setdesc] = useState('');
-    const handleCloseDialog = () => {
-        setOpen(false);
+    const handleEditClick = (data) => {
+        // setId(data._id)
+        history.replace(`/user/home/${data._id}/edit`)
     }
-    const handleEditChanges =() =>{
-        props.updateNotes(id , noteTitle , desc)
-        setOpen(false);
+    const handleDelete = (data) => {
+        props.deleteNotes(data._id);
     }
-
     const { classes } = props;
     return (
         <div>
-            <Header user={props.user} logout={props.logout} />
-          
-            <Grid container spacing={2}>
-                {props.notes.map((data) => {
-                    
-                    return (
-                       
+            <Header user={props.user}
+                logout={props.logout} />
+            {props.notes.length == 0 ? <EmptyTag classes = {classes}/> :
+                <Grid container spacing={1}>
+                    {props.notes.map((data) => {
+                        return (
+                            <Grid item xs={12} sm={4}>
+                                <Box bgcolor="primary"
+                                    border={1}
+                                    borderRadius={10}
+                                    boxShadow={1} p={1} m={3}
+                                    key={data._id}>
+                                    <Typography variant="h5" component="h2">
+                                        {data.title}
+                                    </Typography>
+                                    <Typography className={classes.pos} color="textSecondary">
+                                        {`Created at ${data.createdAt}`}
+                                    </Typography>
+                                    <Typography variant="body2" component="p">
+                                        {`${data.description.substring(0, 65)}`}
+                                    </Typography>
+                                    <Button onClick={() => {
+                                        handleEditClick(data)
+                                    }}>Edit</Button>
+                                    <Button onClick={
+                                        () => handleDelete(data)
+                                    }>Completed</Button>
+                                    <Button>Get Reminder</Button>
+                                </Box>
+                            </Grid>
+                        )
+                    })
+                    }
 
-                        <Grid item xs={12} sm={4}>
-                            <Box bgcolor={color} borderRadius={10} boxShadow={1} p={1} m={3} key={data._id}>
-                                <Typography variant="h5" component="h2">
-                                    {data.title}
-                                </Typography>
-                                <Typography className={classes.pos} color="textSecondary">
-                                    {`Created at ${data.createdAt}`}
-                                </Typography>
-                                <Typography variant="body2" component="p">
-                                    {`${data.description.substring(0, 65)}`}
-                                </Typography>
-                                <Button onClick={()=>{
-                                    setOpen(true);
-                                    setTitle('Edit');
-                                    setNoteTitle(data.title);
-                                    setdesc(data.description);
-                                    setId(data._id);
-                                }}>Edit</Button>
-                                <Button>Completed</Button>
-                                <Button>Get Reminder</Button>
-                            </Box>
-                        </Grid>
-
-
-                    )
-                })}
-
-            </Grid>
-            <Dialog fullScreen open={open} onClose={handleCloseDialog} aria-labelledby="form-dialog-title" >
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleCloseDialog} aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                           {`${title} Note`}
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={handleCloseDialog}>
-                            {`${title}`}
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <TextField id="title" name="title" label="Title" variant="outlined" className={classes.dialogText} value = {noteTitle} onChange = {(e)=>{
-                    setNoteTitle(e.target.value)
-                }}></TextField>
-                <TextField id="description" name="description" label="Description" variant="outlined" className={classes.dialogText} value = {desc} onChange = {(e)=>{
-                    setdesc(e.target.value)
-                }}></TextField>
-                <DialogActions>
-                    <Button color="primary" onClick={handleCloseDialog}>Cancel</Button>
-                    <Button color="primary" onClick={handleEditChanges}>Edit</Button>
-                </DialogActions>
-            </Dialog>
-
-            <Button color="primary" className={classes.button}>Add Notes</Button>
+                </Grid>
+            }
+            <IconButton color="primary" aria-label="Add todo"
+                className={classes.floatingButton}
+                onClick={() => {
+                    history.replace(`/user/home/addNote`)
+                }}>
+                <AddCircleIcon style={{ fontSize: 60 }} />
+            </IconButton>
         </div>
     )
 }
