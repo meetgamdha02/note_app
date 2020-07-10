@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { DialogContent, DialogActions } from '@material-ui/core';
 
 const Style = (theme) => ({
     paper: {
@@ -30,9 +31,9 @@ let LogIn = (props) => {
     const [userName, setUserName] = useState('');
     const [password, setPasswod] = useState('');
     const history = useHistory();
-    useEffect(()=>{
-        if(props.user)history.replace(`/user/home`);
-    },[props.user])
+    useEffect(() => {
+        if (props.user) history.replace(`/user/home`);
+    }, [props.user])
     const handleSubmit = (e) => {
         e.preventDefault();
         props.logInUser(userName, password);
@@ -71,6 +72,7 @@ let LogIn = (props) => {
                                     setPasswod(e.target.value)
                                 }} />
                         </Grid>
+                            <p>{props.isError ? props.isError.message : ""}</p>
                         <Button
                             type="submit"
                             variant="contained"

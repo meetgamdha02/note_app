@@ -12,7 +12,7 @@ var app = express();
 
 
 const URL = 'mongodb://localhost:27017/todo';
-const connect = mongoose.connect(URL);
+const connect = mongoose.connect(URL || process.env.MONGODB_URI);
 
 connect.then((db) => {
   console.log('Connected Successfully');
@@ -38,16 +38,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// function auth(req, res, next) {
-//   console.log(req.session);
-
-//   if (!req.header.authentication) {
-//     var err = new Error('You are not authenticated!');
-//     err.status = 403;
-//     return next(err);
-//   }
-// }
-// app.use(auth)
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static('../frontend/build'));
+}
 app.use('/', userRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

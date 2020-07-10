@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './header';
 import { useHistory } from 'react-router-dom';
 import { withStyles, Box, Typography, Grid, Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import createSpacing from '@material-ui/core/styles/createSpacing';
+
 const Style = (theme) => ({
     paper: {
         margin: theme.spacing(3, 0, 3),
@@ -56,7 +56,7 @@ let EmptyTag = (props) => {
 
 let TodoPage = (props) => {
     const history = useHistory();
-
+   
     const handleEditClick = (data) => {
         // setId(data._id)
         history.replace(`/user/home/${data._id}/edit`)

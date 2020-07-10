@@ -56,7 +56,13 @@ userRouter.route('/signUp').post((req, res, next) => {
         .then((user) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(user);
+            res.json({
+                user: {
+                    username: user.username,
+                    email: user.email
+                },
+                token: getToken(user)
+            });
         }, err => next(err))
         .catch((err) => {
             next(err);
@@ -84,7 +90,7 @@ userRouter.route('/meet').get(auth, (req, res, next) => {
     }).catch((err) => next(err));
 })
 userRouter.route("/user/profile").put(auth, (req, res, next) => {
-    console.log(req.body, req.headers);
+    // console.log(req.body, req.headers);
     jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
         if (err) res.sendStatus(403);
         else {
@@ -99,7 +105,7 @@ userRouter.route("/user/profile").put(auth, (req, res, next) => {
             if (req.body.email) {
                 user.email = req.body.email;
             }
-            console.log(user)
+            // console.log(user)
             user.save()
                 .then((user) => {
                     res.statusCode = 200;
@@ -124,14 +130,14 @@ userRouter.route("/user/profile").put(auth, (req, res, next) => {
 
 
 userRouter.route('/user/home').get(auth, (req, res, next) => {
-    console.log(req.token)
+    // console.log(req.token)
     jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
         if (err) {
             var err = new Error(`There are some errors`);
             next(err);
         }
         else {
-            console.log(decode.username);
+            // console.log(decode.username);
             User.findOne({ username: decode.username }).then((user) => {
                 res.statusCode = 200;
                 res.setHeader('Content-type', 'application/json');
@@ -173,25 +179,25 @@ userRouter.route('/user/home').post(auth, (req, res, next) => {
     })
 });
 
-userRouter.route('/user/home').delete(auth , (req , res , next)=>{
-    jwt.verify(req.token , TOKEN_SECRET_KEY , (err , decode)=>{
-        if(err){
+userRouter.route('/user/home').delete(auth, (req, res, next) => {
+    jwt.verify(req.token, TOKEN_SECRET_KEY, (err, decode) => {
+        if (err) {
             var err = new Error(`There are some errors`);
             next(err);
         }
-        else{
-            User.findOne({username : decode.username}).then((user)=>{
-                if(user!=null){
+        else {
+            User.findOne({ username: decode.username }).then((user) => {
+                if (user != null) {
                     user.notes.id(req.body.id).remove();
                 }
                 user.save()
-                .then((user)=>{
-                    res.statusCode = 200;
-                    res.setHeader('Content-type' , 'application/jsosn');
-                    res.json(user.notes);
-                } , err=>next(err))
+                    .then((user) => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-type', 'application/jsosn');
+                        res.json(user.notes);
+                    }, err => next(err))
             })
-            .catch((err)=>next(err));
+                .catch((err) => next(err));
         }
     })
 })

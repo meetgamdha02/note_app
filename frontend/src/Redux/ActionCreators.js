@@ -27,7 +27,7 @@ export const createUser = (username, email, password) => (dispatch) => {
                 throw errmsg;
             })
         .then(response => response.json())
-        .then((User) => dispatch(addUser(User.user)))
+        .then((User) => dispatch(addUser(User)))
         .catch((err) => {
             console.log(err.message)
         })
@@ -43,7 +43,10 @@ export const logInUser = (username) => ({
     type: ActionType.lOG_IN_USER,
     payload: username
 })
-
+export const logInFailed = (err) =>({
+    type : ActionType.LOGIN_USER_FAILED,
+    payload : err
+})
 export const tepLogInUser = (username, password) => (dispatch) => {
     var User = {
         username: username,
@@ -71,7 +74,7 @@ export const tepLogInUser = (username, password) => (dispatch) => {
         })
         .then((res) => res.json())
         .then((res) => dispatch(logInUser(res)))
-        .catch((err) => console.log(err));
+        .catch((err) => dispatch(logInFailed(err)));
 }
 
 export const tempUpdateUser = (username, email) => (dispatch, getState) => {

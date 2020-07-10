@@ -36,7 +36,7 @@ const Main = (props) => {
    
     const login = () => {
         return (
-            <LogIn logInUser={props.tepLogInUser} user={props.user.user} />
+            <LogIn logInUser={props.tepLogInUser} user={props.user.user} isError = {props.user.isError}/>
         )
     }
     const signup = () => {
@@ -46,7 +46,8 @@ const Main = (props) => {
     }
     const HomeComponenet = ({ match }) => {
         return (
-            <TodoPage user={props.user.user} notes = {props.notes.notes} logout = {props.logOut} deleteNotes = {props.deleteNotes}/>
+            <TodoPage user={props.user.user}
+             notes = {props.notes.notes} logout = {props.logOut} deleteNotes = {props.deleteNotes}/>
         )
     }
     const UserProfileComponent = () => {
