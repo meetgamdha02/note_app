@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, Redirect, withRouter, useHistory } from 'react-router-dom';
-import { createUser, tepLogInUser, tempUpdateUser, tempDisplayNotes , logOutUser  , tempUpdateNotes , tempAddNote , tempDelNotes} from '../Redux/ActionCreators';
+import { Route, Switch, Redirect, withRouter,  } from 'react-router-dom';
+import { createUser, tepLogInUser, tempUpdateUser,  tempUpdateNotes , tempAddNote} from '../Redux/ActionCreators';
 import LogIn from './logIn';
 import SignUp from './signUp';
 import UserProfile from './userProfile';
@@ -18,21 +18,16 @@ const mapDispacherToProps = (disptach) => ({
     createUser: (username, email, password) => disptach(createUser(username, email, password)),
     tepLogInUser: (username, password) => disptach(tepLogInUser(username, password)),
     tempUpdateUser: (username, email) => disptach(tempUpdateUser( username, email)),
-    displayNotes: () => disptach(tempDisplayNotes()),
-    logOut : ()=>(disptach(logOutUser())),
     updateNotes : (id ,  title , description)=>disptach(tempUpdateNotes( id , title , description)),
     addNote : (title , description)=>disptach(tempAddNote(title , description)),
-    deleteNotes : (id)=>disptach(tempDelNotes(id))
 })
 
+ const HomeComponenet = (props) => { 
+        return (
+            <TodoPage/>
+        )
+    }
 const Main = (props) => {
-  
-    useEffect(()=>{
-        props.displayNotes()
-        return ()=>{
-    
-        }
-    } , [])
    
     const login = () => {
         return (
@@ -41,18 +36,13 @@ const Main = (props) => {
     }
     const signup = () => {
         return (
-            <SignUp createUser={props.createUser} user={props.user.user} />
+            <SignUp createUser={props.createUser} user={props.user.user} isError = {props.user.isError}/>
         )
     }
-    const HomeComponenet = ({ match }) => {
-        return (
-            <TodoPage user={props.user.user}
-             notes = {props.notes.notes} logout = {props.logOut} deleteNotes = {props.deleteNotes}/>
-        )
-    }
+   
     const UserProfileComponent = () => {
         return (
-            <UserProfile user={props.user.user} updateUser={props.tempUpdateUser} />
+            <UserProfile user={props.user.user} updateUser={props.tempUpdateUser} isError = {props.user.isError}/>
         )
     }
 
@@ -65,7 +55,7 @@ const Main = (props) => {
 
     const AddNoteFun = () =>{
         return (
-            <AddNotes addNote = {props.addNote}/>
+            <AddNotes addNote = {props.addNote} user = {props.user.user}/>
         )
     }
     

@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { DialogContent, DialogActions } from '@material-ui/core';
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core';
 
 const Style = (theme) => ({
     paper: {
@@ -30,6 +30,7 @@ const Style = (theme) => ({
 let LogIn = (props) => {
     const [userName, setUserName] = useState('');
     const [password, setPasswod] = useState('');
+    const [dialog , setdialog] = useState(props.isError ? true : false);
     const history = useHistory();
     useEffect(() => {
         if (props.user) history.replace(`/user/home`);
@@ -72,7 +73,6 @@ let LogIn = (props) => {
                                     setPasswod(e.target.value)
                                 }} />
                         </Grid>
-                            <p>{props.isError ? props.isError.message : ""}</p>
                         <Button
                             type="submit"
                             variant="contained"
@@ -86,6 +86,18 @@ let LogIn = (props) => {
                 </form>
                 <Link to="/signUp" className={classes.link}>Create A new Account</Link>
             </div>
+            <Dialog open={dialog}>
+                <DialogTitle>Error while LogIn</DialogTitle>
+                <DialogContent dividers>
+                    <DialogContentText>
+                        Please check your email or password
+                        {console.log(props.isError ? props.isError.response.statuste : "")}
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick = {()=>setdialog(false)}>OK</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </Container>
     )
 }

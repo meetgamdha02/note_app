@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Header from './header';
-import { useHistory } from 'react-router-dom';
+import { useHistory , withRouter } from 'react-router-dom';
 import { withStyles, Box, Typography, Grid, Button } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { connect } from 'react-redux';
+import { tempDisplayNotes , logOutUser  , tempDelNotes} from '../Redux/ActionCreators';
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core'; 
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+        notes: state.notes
+    }
+}
+
+const mapDispacherToProps = (disptach) =>({
+    deleteNotes : (id)=>disptach(tempDelNotes(id)),
+    displayNotes: () => disptach(tempDisplayNotes()),
+    logOut : ()=>(disptach(logOutUser())),
+})
 
 const Style = (theme) => ({
     paper: {
@@ -12,7 +28,6 @@ const Style = (theme) => ({
     button: {
         margin: theme.spacing(5),
         display: "flex",
-        // flexDirection: "column",
         alignItems: "center"
     },
     pos: {
@@ -54,9 +69,16 @@ let EmptyTag = (props) => {
     )
 }
 
+
+
 let TodoPage = (props) => {
     const history = useHistory();
    
+    useEffect(()=>{
+        props.displayNotes()
+    } , [])
+    {console.log(props.notes.isError)}
+    const [dialog , setdialog] = useState(props.notes.isError ? true : false);
     const handleEditClick = (data) => {
         // setId(data._id)
         history.replace(`/user/home/${data._id}/edit`)
@@ -67,11 +89,11 @@ let TodoPage = (props) => {
     const { classes } = props;
     return (
         <div>
-            <Header user={props.user}
-                logout={props.logout} />
-            {props.notes.length == 0 ? <EmptyTag classes = {classes}/> :
+            <Header user={props.user.user}
+                logout={props.logOut} />
+            {props.notes.notes.length === 0 ? <EmptyTag classes = {classes}/> :
                 <Grid container spacing={1}>
-                    {props.notes.map((data) => {
+                    {props.notes.notes.map((data) => {
                         return (
                             <Grid item xs={12} sm={4}>
                                 <Box bgcolor="primary"
@@ -110,8 +132,21 @@ let TodoPage = (props) => {
                 }}>
                 <AddCircleIcon style={{ fontSize: 60 }} />
             </IconButton>
+
+            <Dialog open={dialog}>
+                <DialogTitle>Error while Sign Up</DialogTitle>
+                <DialogContent dividers>
+                    <DialogContentText>
+                        Username or email already exists
+                        
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick = {()=>setdialog(false)}>OK</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
 
-export default withStyles(Style)(TodoPage);
+export default withRouter(connect(mapStateToProps , mapDispacherToProps)(withStyles(Style)(TodoPage)));

@@ -7,8 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import withStyles from "@material-ui/core/styles/withStyles";
-
-
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core';  
 
 const Style = (theme) => ({
     paper: {
@@ -33,6 +32,7 @@ let SignUp = (props) => {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [dialog , setdialog] = useState(props.isError ? true : false);
     const { classes } = props;
     const {createUser , user} = props;
     const history = useHistory();
@@ -41,7 +41,7 @@ let SignUp = (props) => {
         createUser(userName , email , password)
         // console.log(user);
        if(user){
-           history.push("/home");
+           history.push("/logIn");
        }
     }
     return (
@@ -111,6 +111,18 @@ let SignUp = (props) => {
                     Already have an account ?
                </Link>
             </div>
+            <Dialog open={dialog}>
+                <DialogTitle>Error while Sign Up</DialogTitle>
+                <DialogContent dividers>
+                    <DialogContentText>
+                        Username or email already exists
+                        
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick = {()=>setdialog(false)}>OK</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </Container>
     )
 }

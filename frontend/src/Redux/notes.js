@@ -1,12 +1,13 @@
 import * as ActionTypes from './ActionTypes';
 
 export const Notes = (state = {
-    notes : []
+    notes : [],
+    isError : ''
 } , actions) =>{
     switch(actions.type){
         case ActionTypes.ADD_NOTE:
             return {
-                ...state , notes : state.notes.concat(actions.payload)
+                ...state , notes : (actions.payload)
             }
         case ActionTypes.DISPLAY_NOTES:
             return{
@@ -20,6 +21,12 @@ export const Notes = (state = {
             return{
                 ...state , notes : actions.payload
             }
+
+        case ActionTypes.DISPLAY_NOTES_FAILED:
+            return{
+                ...state , isError : actions.payload
+            }
+
         case ActionTypes.LOGOUT_USER:
             return {
                 ...state , notes : []

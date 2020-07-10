@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core'; 
 
 const Style = (theme) => ({
     paper: {
@@ -32,6 +33,7 @@ let UserProfile = (props) => {
     const history = useHistory();
     const [newName , setnewName] = useState('');
     const [newEmail , setnewEmail] = useState('');
+    const [dialog , setdialog] = useState(props.isError ? true : false);
     // console.log(props.user['token']);
     let handleBack = ()=>{
         history.replace(`/user/home`)
@@ -115,6 +117,17 @@ let UserProfile = (props) => {
                     </Grid>
                 </form>
             </div>
+            <Dialog open={dialog}>
+                <DialogTitle>Error while Update</DialogTitle>
+                <DialogContent dividers>
+                    <DialogContentText>
+                        Username or email already exists
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick = {()=>setdialog(false)}>OK</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </Container>
     );
 }

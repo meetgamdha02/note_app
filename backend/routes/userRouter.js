@@ -14,7 +14,8 @@ function auth(req, res, next) {
     // console.log(req.headers.Authorization);
     if (!req.headers['authorization']) {
         var err = new Error(`You are not authenticated`);
-        next(err);
+        err.status = 403;   
+        return next(err);
     } else {
         var bearer = req.headers['authorization'].split(' ');
         const token = bearer[1];

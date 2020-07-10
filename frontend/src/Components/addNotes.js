@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core';
 const Style = (theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -37,6 +37,7 @@ let AddNotes = (props) => {
     const history = useHistory();
     const [title, setTitle] = useState('');
     const [desc, setdesc] = useState('');
+    const [dialog , setdialog] = useState(props.user ? false : true)
     const handleCancel = () => {
         history.replace(`/user/home`)
     }
@@ -45,6 +46,10 @@ let AddNotes = (props) => {
         history.replace(`/user/home`);
     }
 
+    const handleDialog = () =>{
+        setdialog(false);
+        history.replace(`/logIn`)
+    }
     return (
         <div>
             <div className={classes.root}>
@@ -99,6 +104,18 @@ let AddNotes = (props) => {
                 className={classes.button}
                 onClick={handleAdd}
             > Add</Button>
+
+            <Dialog open={dialog}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent dividers>
+                    <DialogContentText>
+                        You are not authenticated , Please Log in to continue
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick = {handleDialog}>OK</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

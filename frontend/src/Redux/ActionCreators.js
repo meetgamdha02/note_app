@@ -29,10 +29,14 @@ export const createUser = (username, email, password) => (dispatch) => {
         .then(response => response.json())
         .then((User) => dispatch(addUser(User)))
         .catch((err) => {
-            console.log(err.message)
+            dispatch(signupFailed(err))
         })
 }
 
+export const signupFailed = (err) =>({
+    type : ActionType.SIGN_USER_FAILED,
+    payload : err
+})
 export const addUser = (username) => ({
     type: ActionType.SIGN_UP_USER,
     payload: username
@@ -112,13 +116,18 @@ export const tempUpdateUser = (username, email) => (dispatch, getState) => {
         })
         .then((res) => res.json())
         .then((res) => dispatch(updateUser(res)))
-        .catch((err) => console.log(err));
+        .catch((err) => dispatch(updateUserFailed(err)));
 }
 
 export const updateUser = (user) => ({
     type: ActionType.UPDATE_USER,
     payload: user
 });
+
+export const updateUserFailed = (err) =>({
+    type : ActionType.UPDATE_USER_FAILED,
+    payload : err
+})
 
 export const tempDisplayNotes = () => (dispatch, getState) => {
     // var note = {
@@ -142,6 +151,7 @@ export const tempDisplayNotes = () => (dispatch, getState) => {
             else {
                 var error = new Error(`Error ${res.status} : ${res.statusText}`);
                 error.response = res;
+                {console.log(error.response)}
                 throw error;
             }
         }, err => {
@@ -150,7 +160,7 @@ export const tempDisplayNotes = () => (dispatch, getState) => {
         })
         .then((res) => res.json())
         .then((data) => dispatch(displayNotes(data)))
-        .catch((err) => console.log(err));
+        .catch((err) =>displayNoteError(err));
 }
 
 export const displayNotes = (notes) => ({
@@ -158,6 +168,10 @@ export const displayNotes = (notes) => ({
     payload: notes
 })
 
+export const displayNoteError = (err)=>({
+    type : ActionType.DISPLAY_NOTES_FAILED,
+    payload : err
+})
 export const logOutUser = () => ({
     type: ActionType.LOGOUT_USER
 });
