@@ -9,10 +9,13 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var app = express();
+// mongodb://localhost:27017/todo
 
-
-const URL = 'mongodb://localhost:27017/todo';
-const connect = mongoose.connect(URL || process.env.MONGODB_URI);
+const URL = 'mongodb+srv://meet:@M1e2e3t4@cluster0.xnrh5.mongodb.net/todo?retryWrites=true&w=majority';
+const connect = mongoose.connect(URL || process.env.MONGODB_URI ,{
+  useUnifiedTopology : true,
+  useNewUrlParser : true
+});
 
 connect.then((db) => {
   console.log('Connected Successfully');
