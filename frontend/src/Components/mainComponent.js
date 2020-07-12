@@ -31,7 +31,10 @@ const Main = (props) => {
    
     const login = () => {
         return (
-            <LogIn logInUser={props.tepLogInUser} user={props.user.user} isError = {props.user.isError}/>
+            <LogIn logInUser={props.tepLogInUser} 
+            user={props.user.user} 
+            isError = {props.user.isError} 
+            isLoading = {props.user.isLoading}/>
         )
     }
     const signup = () => {
@@ -49,7 +52,7 @@ const Main = (props) => {
     const EditNotesFun = ({match}) =>{
         return(
             <EditNotes notes = {props.notes.notes.filter((notes)=>notes._id === match.params.id)}
-            updateNotes = {props.updateNotes}/>
+            updateNotes = {props.updateNotes} isError = {props.notes.isError}/>
         )
     }
 

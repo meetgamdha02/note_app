@@ -17,6 +17,12 @@ export const Notes = (state = {
             return {
                 ...state , notes : actions.payload
             }
+        
+        case ActionTypes.UPDATE_NOTE_FAILED : 
+            return {
+                ...state , isError : actions.payload
+            }
+            
         case ActionTypes.DELETE_NOTE:
             return{
                 ...state , notes : actions.payload

@@ -47,6 +47,10 @@ export const logInUser = (username) => ({
     type: ActionType.lOG_IN_USER,
     payload: username
 })
+
+export const logInLoading = () =>({
+    type : ActionType.LOGIN_USER_LOADING
+})
 export const logInFailed = (err) =>({
     type : ActionType.LOGIN_USER_FAILED,
     payload : err
@@ -56,7 +60,7 @@ export const tepLogInUser = (username, password) => (dispatch) => {
         username: username,
         password: password
     };
-
+    dispatch(logInLoading())
     return fetch(URL + 'logIn', {
         method: 'POST',
         body: JSON.stringify(User),
@@ -160,7 +164,7 @@ export const tempDisplayNotes = () => (dispatch, getState) => {
         })
         .then((res) => res.json())
         .then((data) => dispatch(displayNotes(data)))
-        .catch((err) =>displayNoteError(err));
+        .catch((err) => displayNoteError(err));
 }
 
 export const displayNotes = (notes) => ({
@@ -210,13 +214,18 @@ export const tempUpdateNotes = (id, title, description) => (dispatch, getState) 
         })
         .then((res) => res.json())
         .then((data) => dispatch(updateNotes(data)))
-        .catch((err) => console.log(err));
+        .catch((err) => updateNotesFailed(err));
 }
 
 export const updateNotes = (data) => ({
     type: ActionType.UPDATE_NOTE,
     payload: data
 });
+
+export const updateNotesFailed = (err) =>({
+    type : ActionType.UPDATE_NOTE_FAILED,
+    payload : err
+})
 
 export const tempAddNote = (title , description) => (dispatch , getState) => {
     var note = {

@@ -77,7 +77,6 @@ let TodoPage = (props) => {
     useEffect(()=>{
         props.displayNotes()
     } , [])
-    {console.log(props.notes.isError)}
     const [dialog , setdialog] = useState(props.notes.isError ? true : false);
     const handleEditClick = (data) => {
         // setId(data._id)
@@ -95,28 +94,33 @@ let TodoPage = (props) => {
                 <Grid container spacing={1}>
                     {props.notes.notes.map((data) => {
                         return (
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={12}>
                                 <Box bgcolor="primary"
-                                    border={1}
-                                    borderRadius={10}
-                                    boxShadow={1} p={1} m={3}
+                                    boxShadow = {2}
+                                    borderRadius = {2}
+                                    p={1} m={2}
                                     key={data._id}>
                                     <Typography variant="h5" component="h2">
                                         {data.title}
                                     </Typography>
-                                    <Typography className={classes.pos} color="textSecondary">
+                                    {/* <Typography className={classes.pos} color="textSecondary">
                                         {`Created at ${data.createdAt}`}
-                                    </Typography>
-                                    <Typography variant="body2" component="p">
+                                    </Typography> */}
+                                    <Typography variant="body2" color="textSecondary" component="p">
                                         {`${data.description.substring(0, 65)}`}
                                     </Typography>
-                                    <Button onClick={() => {
+                                    <Button size = "small"
+                                    color = "primary" 
+                                    onClick={() => {
                                         handleEditClick(data)
-                                    }}>Edit</Button>
-                                    <Button onClick={
+                                    }} >Edit</Button>
+                                    <Button size = "small"
+                                    color = "primary"  
+                                    onClick={
                                         () => handleDelete(data)
                                     }>Completed</Button>
-                                    <Button>Get Reminder</Button>
+                                    <Button size = "small"
+                                    color = "primary" >Get Reminder</Button>
                                 </Box>
                             </Grid>
                         )

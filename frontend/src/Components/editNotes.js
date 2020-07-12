@@ -8,6 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core'; 
 
 const Style = (theme) => ({
     paper: {
@@ -30,13 +31,14 @@ const Style = (theme) => ({
         margin: theme.spacing(3, 3, 2)
     }
 });
-let EditNotes = (props) => {
 
-    const { classes } = props;
+var EditNotesHandle = (props)=>{
     const history = useHistory();
     const notes = props.notes[0];
+    const classes = props.classes;
     const [title, setTitle] = useState(notes.title);
     const [desc, setdesc] = useState(notes.description);
+
     const handleCancel = () => {
         history.replace(`/user/home`)
     }
@@ -100,6 +102,40 @@ let EditNotes = (props) => {
             > Edit</Button>
         </div>
     )
+}
+
+var EditNoteErrorHandler = (props)=>{
+    const history = useHistory();
+    const [dialog , setdialog] = useState(true);
+    const handleDialog = ()=>{
+        setdialog(false);
+        history.replace('/logIn');
+    }
+   
+    return(
+        <Dialog open={dialog}>
+        <DialogTitle>Error while Edit</DialogTitle>
+        <DialogContent dividers>
+            <DialogContentText>
+                You are not authenticated
+                {console.log(props.isError)}
+            </DialogContentText>
+            <DialogActions>
+                <Button onClick = {handleDialog}>OK</Button>
+            </DialogActions>
+        </DialogContent>
+    </Dialog>
+    )
+}
+let EditNotes = (props) => {
+
+    const { classes } = props;
+    {console.log(props.notes)}
+    return(
+        
+        props.notes.length >0?<EditNotesHandle classes = {classes} notes = {props.notes} updateNotes = {props.updateNotes}/> : <EditNoteErrorHandler isError = {props.isError}/>
+    )
+    
 }
 
 export default withStyles(Style)(EditNotes);

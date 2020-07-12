@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import withStyles from "@material-ui/core/styles/withStyles";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { DialogContent, DialogActions, DialogTitle, DialogContentText , Dialog } from '@material-ui/core';
 
 const Style = (theme) => ({
@@ -27,7 +28,7 @@ const Style = (theme) => ({
         margin: theme.spacing(3)
     }
 });
-let LogIn = (props) => {
+let LogInComponent = (props) => {
     const [userName, setUserName] = useState('');
     const [password, setPasswod] = useState('');
     const [dialog , setdialog] = useState(props.isError ? true : false);
@@ -40,7 +41,7 @@ let LogIn = (props) => {
         props.logInUser(userName, password);
         // console.log(props.user.username);
     }
-    const { classes } = props;
+    const  classes  = props.classes;
     return (
         <Container maxWidth="xs">
             <CssBaseline />
@@ -91,7 +92,7 @@ let LogIn = (props) => {
                 <DialogContent dividers>
                     <DialogContentText>
                         Please check your email or password
-                        {console.log(props.isError ? props.isError.response.statuste : "")}
+                        {/* {console.log(props.isError ? props.isError.response.statuste : "")} */}
                     </DialogContentText>
                     <DialogActions>
                         <Button onClick = {()=>setdialog(false)}>OK</Button>
@@ -102,4 +103,13 @@ let LogIn = (props) => {
     )
 }
 
+var LogIn = (props) =>{
+    const {classes} = props;
+    return(
+        props.isLoading ? <CircularProgress/>: <LogInComponent classes = {classes} logInUser={props.logInUser} 
+        user={props.user} 
+        isError = {props.isError} 
+        />
+    )
+}
 export default withStyles(Style)(LogIn);
